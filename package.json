@@ -4,6 +4,7 @@
   "workspaces": [
     "cdp-agentkit-core/typescript",
     "cdp-langchain/typescript",
+    "cdp-vercel-ai-sdk/typescript",
     "cdp-langchain/examples/chatbot-typescript",
     "cdp-langchain/examples/farcaster-typescript",
     "cdp-langchain/examples/twitter-typescript"
