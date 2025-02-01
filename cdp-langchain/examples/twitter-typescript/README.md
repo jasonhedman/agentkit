@@ -11,7 +11,6 @@ This example demonstrates an agent setup as a terminal style chatbot with access
 ## Requirements
 
 - Node.js 18+
-- [CDP API Key](https://portal.cdp.coinbase.com/access/api)
 - [OpenAI API Key](https://platform.openai.com/docs/quickstart#create-and-export-an-api-key)
 - [Twitter (X) API Keys](https://developer.x.com/en/portal/dashboard)
 
@@ -46,8 +45,6 @@ npm install
 
 Ensure the following vars are set in .env:
 ```
-CDP_API_KEY_NAME=
-CDP_API_KEY_PRIVATE_KEY=
 OPENAI_API_KEY=
 TWITTER_ACCESS_TOKEN=
 TWITTER_ACCESS_TOKEN_SECRET=

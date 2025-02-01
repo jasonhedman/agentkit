@@ -8,7 +8,6 @@ This example demonstrates an agent setup as a terminal style chatbot with access
 ## Requirements
 
 - Node.js 18+
-- [CDP API Key](https://portal.cdp.coinbase.com/access/api)
 - [OpenAI API Key](https://platform.openai.com/docs/quickstart#create-and-export-an-api-key)
 - [Farcaster API Keys via Neynar](https://dev.neynar.com/)
 
@@ -44,8 +43,6 @@ npm install
 Ensure the following vars are set in .env:
 ```
 AGENT_FID=
-CDP_API_KEY_NAME=
-CDP_API_KEY_PRIVATE_KEY=
 OPENAI_API_KEY=
 NEYNAR_API_KEY=
 NEYNAR_MANAGER_SIGNER=
