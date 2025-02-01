@@ -35,11 +35,14 @@ describe("getVercelAITools", () => {
     expect(tool.parameters).toBe(mockAction.schema);
 
     // Test execution with required options
-    const result = await tool.execute!({ test: "data" }, { 
-      abortSignal: new AbortController().signal,
-      toolCallId: "test-call",
-      messages: []
-    });
+    const result = await tool.execute!(
+      { test: "data" },
+      {
+        abortSignal: new AbortController().signal,
+        toolCallId: "test-call",
+        messages: [],
+      },
+    );
     expect(result).toBe("Invoked with data");
   });
 });
