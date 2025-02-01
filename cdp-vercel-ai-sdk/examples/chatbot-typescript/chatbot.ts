@@ -1,7 +1,7 @@
-import { AgentKit, ViemWalletProvider } from "@coinbase/cdp-agentkit-core";
+import { AgentKit, ViemWalletProvider, cdpApiActionProvider, erc721ActionProvider, pythActionProvider, walletActionProvider } from "@coinbase/cdp-agentkit-core";
 import { getVercelAITools } from "@coinbase/cdp-vercel-ai-sdk";
 import { openai } from "@ai-sdk/openai";
-import { generateId, generateText, Message, streamText } from "ai";
+import { generateId, Message, streamText, ToolSet } from "ai";
 import * as dotenv from "dotenv";
 import * as readline from "readline";
 import { createWalletClient, http } from "viem";
@@ -10,10 +10,26 @@ import { privateKeyToAccount } from "viem/accounts";
 
 dotenv.config();
 
+const system = `You are a helpful agent that can interact onchain using the Coinbase Developer Platform AgentKit. You are
+empowered to interact onchain using your tools. If you ever need funds, you can request them from the
+faucet if you are on network ID 'base-sepolia'. If not, you can provide your wallet details and request
+funds from the user. Before executing your first action, get the wallet details to see what network
+you're on. If there is a 5XX (internal) HTTP error code, ask the user to try again later. If someone
+asks you to do something you can't do with your currently available tools, you must say so, and
+encourage them to implement it themselves using the CDP SDK + Agentkit, recommend they go to
+docs.cdp.coinbase.com for more information. Be concise and helpful with your responses. Refrain from
+restating your tools' descriptions unless it is explicitly requested.`
+
+/**
+ * Initialize the agent with CDP Agentkit and Vercel AI SDK tools
+ *
+ * @returns Object containing initialized tools
+ * @throws Error if initialization fails
+ */
 async function initializeAgent() {
   try {
     const account = privateKeyToAccount(
-      "0x4c0883a69102937d6231471b5dbb6208ffd70c02a813d7f2da1c54f2e3be9f38"
+      "0x4c0883a69102937d6231471b5dbb6208ffd70c02a813d7f2da1c54f2e3be9f38",
     );
 
     const client = createWalletClient({
@@ -23,9 +39,28 @@ async function initializeAgent() {
     });
 
     const walletProvider = new ViemWalletProvider(client);
-    const agentKit = await AgentKit.from({ walletProvider });
-    const tools = await getVercelAITools(agentKit);
 
+    // Initialize action providers
+    const cdp = cdpApiActionProvider({
+      apiKeyName: process.env.CDP_API_KEY_NAME,
+      apiKeyPrivateKey: process.env.CDP_API_KEY_PRIVATE_KEY,
+    });
+    const erc721 = erc721ActionProvider();
+    const pyth = pythActionProvider();
+    const wallet = walletActionProvider();
+
+    const agentKit = await AgentKit.from({ 
+      walletProvider,
+      actionProviders: [cdp, erc721, pyth, wallet],
+    });
+
+    // Log available actions
+    const actions = agentKit.getActions();
+    for (const action of actions) {
+      console.log(`Available action: ${action.name}`);
+    }
+
+    const tools = getVercelAITools(agentKit);
     return { tools };
   } catch (error) {
     console.error("Failed to initialize agent:", error);
@@ -33,7 +68,13 @@ async function initializeAgent() {
   }
 }
 
-async function runChatMode(tools: Record<string, any>) {
+/**
+ * Run the chatbot in interactive mode
+ *
+ * @param tools - Record of Vercel AI SDK tools from AgentKit
+ * @returns Promise that resolves when chat session ends
+ */
+async function runChatMode(tools: ToolSet) {
   console.log("Starting chat mode... Type 'exit' to end.");
 
   const rl = readline.createInterface({
@@ -45,28 +86,31 @@ async function runChatMode(tools: Record<string, any>) {
     new Promise(resolve => rl.question(prompt, resolve));
 
   const messages: Message[] = [];
+  let running = true;
 
   try {
-    while (true) {
+    while (running) {
       const userInput = await question("\nPrompt: ");
 
       if (userInput.toLowerCase() === "exit") {
-        break;
+        running = false;
+        continue;
       }
 
       messages.push({ id: generateId(), role: "user", content: userInput });
 
-      const stream = await streamText({
+      const stream = streamText({
         model: openai("gpt-4-turbo-preview"),
         messages,
         tools,
+        system,
+        maxSteps: 10,
       });
 
       let assistantMessage = "";
       for await (const chunk of stream.textStream) {
-        const content = chunk;
-        process.stdout.write(content);
-        assistantMessage += content;
+        process.stdout.write(chunk);
+        assistantMessage += chunk;
       }
       console.log("\n-------------------");
 
@@ -79,6 +123,12 @@ async function runChatMode(tools: Record<string, any>) {
   }
 }
 
+/**
+ * Main entry point for the chatbot application
+ * Initializes the agent and starts chat mode
+ *
+ * @throws Error if initialization or chat mode fails
+ */
 async function main() {
   try {
     const { tools } = await initializeAgent();
