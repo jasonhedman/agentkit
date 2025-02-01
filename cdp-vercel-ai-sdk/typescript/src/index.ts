@@ -4,7 +4,7 @@
 
 import { z } from "zod";
 import { AgentKit, type Action } from "@coinbase/cdp-agentkit-core";
-import { tool, type Tool } from "ai";
+import { tool, type ToolSet } from "ai";
 
 /**
  * Get Vercel AI SDK tools from an AgentKit instance
@@ -12,7 +12,7 @@ import { tool, type Tool } from "ai";
  * @param agentKit - The AgentKit instance
  * @returns An array of Vercel AI SDK tools
  */
-export async function getVercelAITools(agentKit: AgentKit): Promise<Record<string, Tool>> {
+export function getVercelAITools(agentKit: AgentKit): ToolSet {
   const actions: Action[] = agentKit.getActions();
   return actions.reduce((acc, action) => {
     acc[action.name] = tool({

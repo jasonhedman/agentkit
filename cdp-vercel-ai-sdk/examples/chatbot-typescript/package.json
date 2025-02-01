@@ -1,0 +1,15 @@
+{
+  "name": "cdp-vercel-ai-sdk-example-chatbot",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "tsx chatbot.ts"
+  },
+  "dependencies": {
+    "@ai-sdk/openai": "^1.1.9",
+    "@coinbase/cdp-agentkit-core": "file:../../../cdp-agentkit-core",
+    "@coinbase/cdp-vercel-ai-sdk": "file:../../typescript",
+    "ai": "^4.1.16",
+    "tsx": "^4.7.1"
+  }
+}
