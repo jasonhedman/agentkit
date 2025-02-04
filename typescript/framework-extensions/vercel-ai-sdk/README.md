@@ -1,6 +1,6 @@
 # AgentKit Extension - Vercel AI SDK Toolkit
 
-CDP integration with Vercel AI SDK to enable agentic workflows using the core primitives defined in `cdp-agentkit-core`.
+AgentKit integration with Vercel AI SDK to enable agentic workflows using the core primitives defined in `@coinbase/agentkit`.
 
 This toolkit contains tools that enable an LLM agent to interact with the [Coinbase Developer Platform](https://docs.cdp.coinbase.com/) through Vercel AI SDK. The toolkit provides a wrapper around the CDP SDK, allowing agents to perform onchain operations like transfers, trades, and smart contract interactions.
 
