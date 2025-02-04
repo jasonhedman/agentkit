@@ -1,4 +1,4 @@
-# CDP Agentkit Extension - Vercel AI SDK Toolkit
+# AgentKit Extension - Vercel AI SDK Toolkit
 
 CDP integration with Vercel AI SDK to enable agentic workflows using the core primitives defined in `cdp-agentkit-core`.
 
