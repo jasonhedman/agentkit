@@ -1,8 +1,6 @@
 # AgentKit Extension - Vercel AI SDK Toolkit
 
-AgentKit integration with Vercel AI SDK to enable agentic workflows using the core primitives defined in `@coinbase/agentkit`.
-
-This toolkit contains tools that enable an LLM agent to interact with the [Coinbase Developer Platform](https://docs.cdp.coinbase.com/) through Vercel AI SDK. The toolkit provides a wrapper around the CDP SDK, allowing agents to perform onchain operations like transfers, trades, and smart contract interactions.
+Vercel AI SDK extension of AgentKit. Enables agentic workflows to interact with onchain actions.
 
 ## Setup
 
@@ -14,7 +12,7 @@ This toolkit contains tools that enable an LLM agent to interact with the [Coinb
 ### Installation
 
 ```bash
-npm install @coinbase/cdp-vercel-ai-sdk
+npm install @coinbase/agentkit-vercel-ai-sdk
 ```
 
 ### Environment Setup
@@ -32,11 +30,11 @@ export NETWORK_ID=base-sepolia  # Optional: Defaults to base-sepolia
 ### Basic Setup
 
 ```typescript
-import { getVercelAITools } from "@coinbase/cdp-vercel-ai-sdk";
-import { CdpAgentkit } from "@coinbase/cdp-agentkit-core";
+import { getVercelAITools } from "@coinbase/agentkit-vercel-ai-sdk";
+import { AgentKit } from "@coinbase/agentkit";
 
 // Initialize CDP AgentKit
-const agentkit = await CdpAgentkit.configureWithWallet();
+const agentkit = await AgentKit.configureWithWallet();
 
 // Get available tools
 const tools = await getVercelAITools(agentkit);
