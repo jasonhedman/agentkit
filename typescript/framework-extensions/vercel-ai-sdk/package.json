@@ -1,5 +1,5 @@
 {
-  "name": "@coinbase/cdp-vercel-ai-sdk",
+  "name": "@coinbase/agentkit-vercel-ai-sdk",
   "version": "0.0.1",
   "description": "Vercel AI SDK extension of CDP Agentkit",
   "repository": "https://github.com/coinbase/agentkit",
